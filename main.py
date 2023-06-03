@@ -1,29 +1,36 @@
 import time
 import threading
+from multiprocessing import Queue
 
-from workers.SumSquareWorkers import SumSqquareWorker
-from workers.SpeepWorkers import SleppWorker
+from workers.WikiWorker import WikiWorker
+from workers.YahooFinancePriceWorker import YahooFinanceScheduler
+
 
 def main():
+    symbol_queue = Queue()
     current_time = time.time()
-    my_workers = []
-    for i in range(5):
-        sum_sqquare_worker = SumSqquareWorker(i)
-        my_workers.append(sum_sqquare_worker)
+    wiki_worker = WikiWorker()
 
-    for i in range(len(my_workers)):
-        my_workers[i].join()
-    print("Execution_time: ", round((time.time() - current_time)/1, 2))
+    yahoo_finance_scheduler_num = 10
 
-    current_time = time.time()
-    my_workers = []
+    yahoo_finance_scheduler_count = []
+    for i in range(yahoo_finance_scheduler_num):
+        yahoo_finance_scheduler = YahooFinanceScheduler(symbol_queue)
+        yahoo_finance_scheduler_count.append(yahoo_finance_scheduler)
 
-    for i in range(5):
-        slepp_worker = SleppWorker(i+1)
-        my_workers.append(slepp_worker)
+    for symbol in wiki_worker.get_500_companies():
+        symbol_queue.put(symbol)
 
-    for i in range(len(my_workers)):
-        my_workers[i].join()
+    for i in range(len(yahoo_finance_scheduler_count)):
+        symbol_queue.put('DONE')
+    #    yahoo_finance_worker = YahooFinanceWorker(symbol)
+     #   my_workers.append(yahoo_finance_worker)
+
+    print(f'Running threads {len(yahoo_finance_scheduler_count)}')
+    for i in range(len(yahoo_finance_scheduler_count)):
+        yahoo_finance_scheduler_count[i].join()
+
+    print(f'Running threads {len(yahoo_finance_scheduler_count)}')
     print("Execution_time: ", round((time.time() - current_time)/1, 2))
 
 

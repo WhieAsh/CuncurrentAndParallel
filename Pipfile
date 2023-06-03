@@ -6,6 +6,10 @@ name = "pypi"
 [packages]
 requests = "*"
 beautifulsoup4 = "*"
+python-certifi-win32 = "*"
+lxml = "*"
+psycopg2-binary = "*"
+sqlalchemy = "*"
 
 [dev-packages]
 

@@ -2,8 +2,8 @@ import threading
 
 
 class SumSqquareWorker(threading.Thread):
-    def __init__(self, n, **kwargs):
-        super(SumSqquareWorker, self).__init__(**kwargs)
+    def __init__(self, n, **kayrgs):
+        super(SumSqquareWorker, self).__init__(**kayrgs)
         self._n = n
         self.start()
 

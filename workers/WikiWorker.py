@@ -10,7 +10,7 @@ class WikiWorker():
     def _extract_company_symbols(page_htm):
         soup = BeautifulSoup(page_htm, 'lxml')
         table = soup.find(id='constituents')
-        table_rows = table.find('tr')
+        table_rows = table.find_all('tr')
         for table_row in table_rows[1:]:
             symbol = table_row.find('td').text.strip('\n')
             yield symbol
@@ -22,4 +22,4 @@ class WikiWorker():
             print("Couldn't get entries")
             return []
 
-        yield from _extract_company_symbols(response.text)
+        yield from self._extract_company_symbols(response.text)
