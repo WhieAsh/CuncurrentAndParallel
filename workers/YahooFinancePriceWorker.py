@@ -1,32 +1,39 @@
 import _random
-import time
 import random
 import threading
 import time
+import datetime
+from queue import Empty
 
 import requests
-from bs4 import BeautifulSoup
 from lxml import html
 
 
 class YahooFinanceScheduler(threading.Thread):
-    def __init__(self, input_queue):
+    def __init__(self, input_queue, out_queues):
         super(YahooFinanceScheduler, self).__init__()
         self._input_queue = input_queue
+        self._out_queues = out_queues
 
         self.start()
 
     def run(self) -> None:
 
         while True:
-            symbol = self._input_queue.get()
+            try:
+                symbol = self._input_queue.get(timeout=10)
+            except Empty:
+                print('Timeout reached Yahoo Finence Worker stopping...')
+                break
             if symbol=='DONE':
                 break
             yahoo_pinance_worker = YahooFinanceWorker(symbol)
             price = yahoo_pinance_worker.get_yahoo_price()
             print(f'{symbol}  = {price}')
-            time.sleep(random.random())
-
+            value_symbol = [symbol, price, datetime.datetime.utcnow()]
+            for out_queue in self._out_queues:
+                out_queue.put(value_symbol)
+                time.sleep(random.random())
 
 class YahooFinanceWorker():
     def __init__(self, symbol, **keyargs):

@@ -1,3 +1,9 @@
-from workers.YahooFinancePriceWorker import YahooFinanceWorker
+from multiprocessing import Queue
+from workers.PostgresWorker import PostgresMasterScheduler
 
-yahoo_worker = YahooFinanceWorker(symbol='MMM')
+
+out_queue = Queue()
+
+pg_m = PostgresMasterScheduler(out_queue)
+
+out_queue.put('DONE')

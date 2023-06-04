@@ -10,6 +10,7 @@ python-certifi-win32 = "*"
 lxml = "*"
 psycopg2-binary = "*"
 sqlalchemy = "*"
+pyyaml = "*"
 
 [dev-packages]
 
