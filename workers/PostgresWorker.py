@@ -9,6 +9,8 @@ from queue import Empty
 
 class PostgresMasterScheduler(threading.Thread):
     def __init__(self, input_queue: Queue, **kwargs):
+        if 'out_queues' in kwargs:
+            kwargs.pop('out_queues')
         super(PostgresMasterScheduler, self).__init__(**kwargs)
         self._input_queue = input_queue
 

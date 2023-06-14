@@ -6,21 +6,21 @@ queues:
     description: This queue contains tasks for Postgres Worker
 
 workers:
-#    - name: WikiWorker
-#      description: This Worker read and scram symbols from Wiki page
-#      inout_vallues:
-#        - 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
-#      class_path: workers.WikiWorker
-#      class: WikiWorker
-#      out_queues:
-#        - WikiSymbols
+    - name: WikiWorker
+      description: This Worker read and scram symbols from Wiki page
+      inout_values:
+        - 'https://en.wikipedia.org/wiki/List_of_S%26P_500_companies'
+      class_path: workers.WikiWorker
+      class: WikiWorkerScheduler
+      out_queues:
+        - WikiSymbols
 
     - name: YahooFinanceWorker
       description: This Worker finance price from Yahoo site
       web_path: 'https://finance.yahoo.com/quote/'
       class_path: workers.YahooFinancePriceWorker
       class: YahooFinanceScheduler
-      instances: 6
+      instances: 10
       input_queue: WikiSymbols
       out_queues:
         - PostgresTasks

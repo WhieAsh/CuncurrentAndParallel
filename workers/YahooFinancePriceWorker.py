@@ -29,7 +29,7 @@ class YahooFinanceScheduler(threading.Thread):
                 break
             yahoo_pinance_worker = YahooFinanceWorker(symbol)
             price = yahoo_pinance_worker.get_yahoo_price()
-            print(f'{symbol}  = {price}')
+            #print(f'{symbol}  = {price}')
             value_symbol = [symbol, price, datetime.datetime.utcnow()]
             for out_queue in self._out_queues:
                 out_queue.put(value_symbol)
